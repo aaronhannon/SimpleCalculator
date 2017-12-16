@@ -15,8 +15,9 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
+/* Get Zero working
+ * 
+*/
 namespace SimpleCalculator
 {
     /// <summary>
@@ -28,6 +29,10 @@ namespace SimpleCalculator
         string numString;
         Button btn;
         bool started = false;
+        bool operationBool = false;
+        float[] numbers;
+        string[] operations = new string[10];
+        int operationCounter = 0;
 
         public MainPage()
         {
@@ -60,133 +65,111 @@ namespace SimpleCalculator
             Grid btnGrid = new Grid();
             btnGrid.Name = "btnGrid";
 
+            //rows
             for (int i = 0; i < 4; i++)
             {   
                 btnGrid.RowDefinitions.Add(new RowDefinition());
                 btnGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
-                switch (i)
+            //cols
+                for (int j = 0; j < 4; j++)
                 {
-                    case 0:
-                        btn = new Button();
-                        btn.Height = 150;
-                        btn.Width = 150;
-                        btn.VerticalAlignment = VerticalAlignment.Center;
-                        btn.HorizontalAlignment = HorizontalAlignment.Center;
-                        btn.FontFamily = new FontFamily("Sans-Serif");
-                        btn.FontSize = 40;
-                        btn.Foreground = new SolidColorBrush(Colors.White);
-                        btnGrid.Background = new SolidColorBrush(Color.FromArgb(155, (byte)0, (byte)38, (byte)45));
-                        btn.BorderThickness = new Thickness(0);
-                        btn.Content = "+";
-                        btn.SetValue(Grid.RowProperty, i);
-                        btn.SetValue(Grid.ColumnProperty, 3);
-                        btn.Tapped += Btn_Tapped;
-                        btnGrid.Children.Add(btn);
-                        break;
 
-                    case 1:
-                        btn = new Button();
-                        btn.Height = 150;
-                        btn.Width = 150;
-                        btn.VerticalAlignment = VerticalAlignment.Center;
-                        btn.HorizontalAlignment = HorizontalAlignment.Center;
-                        btn.FontFamily = new FontFamily("Sans-Serif");
-                        btn.FontSize = 40;
-                        btn.Foreground = new SolidColorBrush(Colors.White);
-                        btn.BorderThickness = new Thickness(0);
-                        btn.Content = "-";
-                        btn.SetValue(Grid.RowProperty, i);
-                        btn.SetValue(Grid.ColumnProperty, 3);
-                        btn.Tapped += Btn_Tapped;
-                        btnGrid.Children.Add(btn);
-                        break;
-
-                    case 2:
-                        btn = new Button();
-                        btn.Height = 150;
-                        btn.Width = 150;
-                        btn.VerticalAlignment = VerticalAlignment.Center;
-                        btn.HorizontalAlignment = HorizontalAlignment.Center;
-                        btn.FontFamily = new FontFamily("Sans-Serif");
-                        btn.FontSize = 40;
-                        btn.Foreground = new SolidColorBrush(Colors.White);
-                        btn.BorderThickness = new Thickness(0);
-                        btn.Content = "*";
-                        btn.SetValue(Grid.RowProperty, i);
-                        btn.SetValue(Grid.ColumnProperty, 3);
-                        btn.Tapped += Btn_Tapped;
-                        btnGrid.Children.Add(btn);
-                        break;
-
-                    case 3:
-                        btn = new Button();
-                        btn.Height = 150;
-                        btn.Width = 150;
-                        btn.VerticalAlignment = VerticalAlignment.Center;
-                        btn.HorizontalAlignment = HorizontalAlignment.Center;
-                        btn.FontFamily = new FontFamily("Sans-Serif");
-                        btn.FontSize = 40;
-                        btn.Foreground = new SolidColorBrush(Colors.White);
-                        btn.BorderThickness = new Thickness(0);
-                        btn.Content = "/";
-                        btn.SetValue(Grid.RowProperty, i);
-                        btn.SetValue(Grid.ColumnProperty, 3);
-                        btn.Tapped += Btn_Tapped;
-                        btnGrid.Children.Add(btn);
-                        break;
-
-
-                }
-
-                for (int j = 0; j < 3; j++)
-                {
-                    btn = new Button();
-                    btn.Height = 150;
-                    btn.Width = 150;
-                    btn.VerticalAlignment = VerticalAlignment.Center;
-                    btn.HorizontalAlignment = HorizontalAlignment.Center;
-                    //btn.Background = new SolidColorBrush(Colors.White);
-                    btn.SetValue(Grid.RowProperty, i);
-                    btn.SetValue(Grid.ColumnProperty, j);
-
-                    string value ="";
-
-                    if (numberCounter < 10)
+                    switch (j)
                     {
-                        btn.Content = numberCounter;
-                        value += numberCounter;
-                        btn.Tag = value;
-                    }
-                    else
-                    {
-                        switch (numberCounter)
-                        {
-                            case 10:
-                                btn.Content = ".";
+                        case 3:
+                            btn = new Button();
+                            btn.Height = 150;
+                            btn.Width = 150;
+                            btn.VerticalAlignment = VerticalAlignment.Center;
+                            btn.HorizontalAlignment = HorizontalAlignment.Center;
+                            btn.FontFamily = new FontFamily("Sans-Serif");
+                            btn.FontSize = 40;
+                            btn.Foreground = new SolidColorBrush(Colors.White);
+                            btn.Background = new SolidColorBrush(Color.FromArgb(155, (byte)0, (byte)38, (byte)45));
+                            btn.BorderThickness = new Thickness(0);
+
+                            if (i == 0)
+                            {
+                                btn.Content = "+";
+                                btn.Tag = "+";
+                            }
+                            else if (i == 1)
+                            {
+                                btn.Content = "-";
+                                btn.Tag = "-";
+                            }
+                            else if (i == 2)
+                            {
+                                btn.Content = "*";
+                                btn.Tag = "*";
+                            }
+                            else if (i == 3)
+                            {
+                                btn.Content = "/";
+                                btn.Tag = "/";
+                            }
+
+                            btn.SetValue(Grid.RowProperty, i);
+                            btn.SetValue(Grid.ColumnProperty, j);
+                            btn.Tapped += Btn_Tapped;
+                            btnGrid.Children.Add(btn);
+                            break;
+
+                        default:
+                            btn = new Button();
+                            btn.Height = 150;
+                            btn.Width = 150;
+                            btn.VerticalAlignment = VerticalAlignment.Center;
+                            btn.HorizontalAlignment = HorizontalAlignment.Center;
+                            //btn.Background = new SolidColorBrush(Colors.White);
+                            btn.SetValue(Grid.RowProperty, i);
+                            btn.SetValue(Grid.ColumnProperty, j);
+
+                            string value = "";
+
+                            if (numberCounter < 10)
+                            {
+                                btn.Content = numberCounter;
                                 value += numberCounter;
                                 btn.Tag = value;
-                                break;
+                            }
+                            else
+                            {
+                                switch (numberCounter)
+                                {
+                                    case 10:
+                                        btn.Content = ".";
+                                        value += numberCounter;
+                                        btn.Tag = value;
+                                        break;
 
-                            case 11:
-                                btn.Content = 0;
-                                break;
+                                    case 11:
+                                        btn.Content = 0;
+                                        value += numberCounter;
+                                        btn.Tag = "0";
+                                        break;
 
-                            case 12:
-                                btn.Content = "=";
-                                break;
-                        }
+                                    case 12:
+                                        btn.Content = "=";
+                                        break;
+                                }
+                            }
+
+                            btn.FontFamily = new FontFamily("Sans-Serif");
+                            btn.FontSize = 40;
+                            btn.Foreground = new SolidColorBrush(Colors.White);
+                            btn.BorderThickness = new Thickness(0);
+
+                            btn.Tapped += Btn_Tapped;
+                            btnGrid.Children.Add(btn);
+
+                            numberCounter++;
+                            break;
+
                     }
 
-                    btn.FontFamily = new FontFamily("Sans-Serif");
-                    btn.FontSize = 40;
-                    btn.Foreground = new SolidColorBrush(Colors.White);
-                    btn.BorderThickness = new Thickness(0);
 
-                    btn.Tapped += Btn_Tapped;
-                    btnGrid.Children.Add(btn);
-
-                    numberCounter++;
                 }
 
             }
@@ -204,10 +187,18 @@ namespace SimpleCalculator
 
         private void Btn_Tapped(object sender, TappedRoutedEventArgs e)
         {
-     
+
             string value = " ";    
             Button btn = (Button)sender;
             Grid outputGrid = FindName("DisplayGrid") as Grid;
+
+            if (btn.Tag == "+" || btn.Tag == "-" || btn.Tag == "*" || btn.Tag == "/")
+            {
+                operations[operationCounter] = (string)btn.Tag;
+                
+                operationCounter++;
+                System.Diagnostics.Debug.WriteLine(operations[0]);
+            }
 
             if (started)
             {
@@ -217,7 +208,6 @@ namespace SimpleCalculator
             value = (string)btn.Tag;
 
             numString += value;
-            //txBl = null;
 
             txBl.Text = numString;
             txBl.SetValue(Grid.RowProperty, 1);
@@ -229,6 +219,7 @@ namespace SimpleCalculator
             outputGrid.Children.Add(txBl);
 
             started = true;
+            operationBool = false;
 
             //txBl.Text = value;
         }
