@@ -65,6 +65,80 @@ namespace SimpleCalculator
                 btnGrid.RowDefinitions.Add(new RowDefinition());
                 btnGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
+                switch (i)
+                {
+                    case 0:
+                        btn = new Button();
+                        btn.Height = 150;
+                        btn.Width = 150;
+                        btn.VerticalAlignment = VerticalAlignment.Center;
+                        btn.HorizontalAlignment = HorizontalAlignment.Center;
+                        btn.FontFamily = new FontFamily("Sans-Serif");
+                        btn.FontSize = 40;
+                        btn.Foreground = new SolidColorBrush(Colors.White);
+                        btnGrid.Background = new SolidColorBrush(Color.FromArgb(155, (byte)0, (byte)38, (byte)45));
+                        btn.BorderThickness = new Thickness(0);
+                        btn.Content = "+";
+                        btn.SetValue(Grid.RowProperty, i);
+                        btn.SetValue(Grid.ColumnProperty, 3);
+                        btn.Tapped += Btn_Tapped;
+                        btnGrid.Children.Add(btn);
+                        break;
+
+                    case 1:
+                        btn = new Button();
+                        btn.Height = 150;
+                        btn.Width = 150;
+                        btn.VerticalAlignment = VerticalAlignment.Center;
+                        btn.HorizontalAlignment = HorizontalAlignment.Center;
+                        btn.FontFamily = new FontFamily("Sans-Serif");
+                        btn.FontSize = 40;
+                        btn.Foreground = new SolidColorBrush(Colors.White);
+                        btn.BorderThickness = new Thickness(0);
+                        btn.Content = "-";
+                        btn.SetValue(Grid.RowProperty, i);
+                        btn.SetValue(Grid.ColumnProperty, 3);
+                        btn.Tapped += Btn_Tapped;
+                        btnGrid.Children.Add(btn);
+                        break;
+
+                    case 2:
+                        btn = new Button();
+                        btn.Height = 150;
+                        btn.Width = 150;
+                        btn.VerticalAlignment = VerticalAlignment.Center;
+                        btn.HorizontalAlignment = HorizontalAlignment.Center;
+                        btn.FontFamily = new FontFamily("Sans-Serif");
+                        btn.FontSize = 40;
+                        btn.Foreground = new SolidColorBrush(Colors.White);
+                        btn.BorderThickness = new Thickness(0);
+                        btn.Content = "*";
+                        btn.SetValue(Grid.RowProperty, i);
+                        btn.SetValue(Grid.ColumnProperty, 3);
+                        btn.Tapped += Btn_Tapped;
+                        btnGrid.Children.Add(btn);
+                        break;
+
+                    case 3:
+                        btn = new Button();
+                        btn.Height = 150;
+                        btn.Width = 150;
+                        btn.VerticalAlignment = VerticalAlignment.Center;
+                        btn.HorizontalAlignment = HorizontalAlignment.Center;
+                        btn.FontFamily = new FontFamily("Sans-Serif");
+                        btn.FontSize = 40;
+                        btn.Foreground = new SolidColorBrush(Colors.White);
+                        btn.BorderThickness = new Thickness(0);
+                        btn.Content = "/";
+                        btn.SetValue(Grid.RowProperty, i);
+                        btn.SetValue(Grid.ColumnProperty, 3);
+                        btn.Tapped += Btn_Tapped;
+                        btnGrid.Children.Add(btn);
+                        break;
+
+
+                }
+
                 for (int j = 0; j < 3; j++)
                 {
                     btn = new Button();
