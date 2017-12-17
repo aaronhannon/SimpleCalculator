@@ -243,16 +243,39 @@ namespace SimpleCalculator
             }
             else
             {
-                float values;
+                float values = 0;
+                int counter = 0;
 
                 numbers[operationCounter] = numStringArray;
 
-                System.Diagnostics.Debug.WriteLine(float.Parse(numbers[0]));
-                System.Diagnostics.Debug.WriteLine(float.Parse(numbers[1]));
+                //System.Diagnostics.Debug.WriteLine(float.Parse(numbers[0]));
+                //System.Diagnostics.Debug.WriteLine(float.Parse(numbers[1]));
 
-                values = float.Parse(numbers[0]) + float.Parse(numbers[1]);
+                //values = float.Parse(numbers[0]) + float.Parse(numbers[1]);
 
-                System.Diagnostics.Debug.WriteLine(values);
+                //System.Diagnostics.Debug.WriteLine(values);
+                //System.Diagnostics.Debug.WriteLine(operationCounter);
+
+                for (int i = 0; i < operationCounter; i++)
+                {
+                    if(operations[counter] == "+")
+                    {
+                        values = float.Parse(numbers[counter]) + float.Parse(numbers[counter+1]);
+                    }
+                    else if (operations[counter] == "-")
+                    {
+                        values = float.Parse(numbers[counter]) - float.Parse(numbers[counter + 1]);
+                    }
+                    else if (operations[counter] == "*")
+                    {
+                        values = float.Parse(numbers[counter]) * float.Parse(numbers[counter + 1]);
+                    }
+                    else if (operations[counter] == "/")
+                    {
+                        values = float.Parse(numbers[counter]) / float.Parse(numbers[counter + 1]);
+                    }
+
+                }
 
                 outputGrid.Children.Remove(txBl);
                 txBl.Text = values.ToString();
