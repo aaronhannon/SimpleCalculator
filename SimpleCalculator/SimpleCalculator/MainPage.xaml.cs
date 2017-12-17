@@ -245,6 +245,7 @@ namespace SimpleCalculator
             {
                 float values = 0;
                 int counter = 0;
+                float storedValue = 0;
 
                 numbers[operationCounter] = numStringArray;
 
@@ -258,23 +259,63 @@ namespace SimpleCalculator
 
                 for (int i = 0; i < operationCounter; i++)
                 {
-                    if(operations[counter] == "+")
-                    {
-                        values = float.Parse(numbers[counter]) + float.Parse(numbers[counter+1]);
-                    }
-                    else if (operations[counter] == "-")
-                    {
-                        values = float.Parse(numbers[counter]) - float.Parse(numbers[counter + 1]);
-                    }
-                    else if (operations[counter] == "*")
-                    {
-                        values = float.Parse(numbers[counter]) * float.Parse(numbers[counter + 1]);
-                    }
-                    else if (operations[counter] == "/")
-                    {
-                        values = float.Parse(numbers[counter]) / float.Parse(numbers[counter + 1]);
+                    if(operations[counter] == "+"){
+                        if(counter == 0)
+                        {
+                            values = float.Parse(numbers[counter]) + float.Parse(numbers[counter + 1]);
+                            storedValue = values;                    
+                        }
+                        else
+                        {
+                            values = storedValue + float.Parse(numbers[counter + 1]);
+                            storedValue = values;
+                        }
+
                     }
 
+                    else if (operations[counter] == "-")
+                    {
+                        if (counter == 0)
+                        {
+                            values = float.Parse(numbers[counter]) - float.Parse(numbers[counter + 1]);
+                            storedValue = values;
+                        }
+                        else
+                        {
+                            values = storedValue - float.Parse(numbers[counter + 1]);
+                            storedValue = values;
+                        }
+                    }
+
+                    else if (operations[counter] == "*")
+                    {
+                        if (counter == 0)
+                        {
+                            values = float.Parse(numbers[counter]) * float.Parse(numbers[counter + 1]);
+                            storedValue = values;
+                        }
+                        else
+                        {
+                            values = storedValue * float.Parse(numbers[counter + 1]);
+                            storedValue = values;
+                        }
+                    }
+
+                    else if (operations[counter] == "/")
+                    {
+                        if (counter == 0)
+                        {
+                            values = float.Parse(numbers[counter]) / float.Parse(numbers[counter + 1]);
+                            storedValue = values;
+                        }
+                        else
+                        {
+                            values = storedValue / float.Parse(numbers[counter + 1]);
+                            storedValue = values;
+                        }
+                    }
+
+                    counter++;
                 }
 
                 outputGrid.Children.Remove(txBl);
