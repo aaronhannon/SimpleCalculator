@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+
 /* Get Zero working
  * 
 */
@@ -27,11 +28,12 @@ namespace SimpleCalculator
     {
         int numberCounter = 1;
         string numString;
+        string numStringArray;
         Button btn;
         bool started = false;
         bool operationBool = false;
-        float[] numbers;
-        string[] operations = new string[10];
+        string[] numbers = new string[100];
+        string[] operations = new string[100];
         int operationCounter = 0;
 
         public MainPage()
@@ -152,6 +154,7 @@ namespace SimpleCalculator
 
                                     case 12:
                                         btn.Content = "=";
+                                        btn.Tag = "=";
                                         break;
                                 }
                             }
@@ -168,7 +171,6 @@ namespace SimpleCalculator
                             break;
 
                     }
-
 
                 }
 
@@ -192,37 +194,100 @@ namespace SimpleCalculator
             Button btn = (Button)sender;
             Grid outputGrid = FindName("DisplayGrid") as Grid;
 
-            if (btn.Tag == "+" || btn.Tag == "-" || btn.Tag == "*" || btn.Tag == "/")
+            if (btn.Tag != "=")
             {
-                operations[operationCounter] = (string)btn.Tag;
-                
-                operationCounter++;
-                System.Diagnostics.Debug.WriteLine(operations[0]);
-            }
 
-            if (started)
+                if (btn.Tag == "+" || btn.Tag == "-" || btn.Tag == "*" || btn.Tag == "/")
+                {
+                    numbers[operationCounter] = numStringArray;
+                    //numStringArray = "";
+                    operations[operationCounter] = (string)btn.Tag;
+                    System.Diagnostics.Debug.WriteLine(numbers[operationCounter]);
+                    System.Diagnostics.Debug.WriteLine(operations[operationCounter]);
+                    operationCounter++;
+
+                }
+
+                if (started)
+                {
+                    outputGrid.Children.Remove(txBl);
+                }
+
+                value = (string)btn.Tag;
+
+                if (value == "+" || value == "-" || value == "*" || value == "/")
+                {
+                    numString += value;
+                    value = "";
+                    numStringArray = "";
+                }
+                else
+                {
+                    numStringArray += value;
+                    numString += value;
+                }
+
+                txBl.Text = numString;
+                txBl.SetValue(Grid.RowProperty, 1);
+                txBl.HorizontalAlignment = HorizontalAlignment.Right;
+                txBl.Foreground = new SolidColorBrush(Colors.White);
+                txBl.FontSize = 45;
+
+                System.Diagnostics.Debug.WriteLine("Tapped: " + value);
+                outputGrid.Children.Add(txBl);
+
+                started = true;
+                operationBool = false;
+
+                //txBl.Text = value;
+            }
+            else
             {
+                float values;
+
+                numbers[operationCounter] = numStringArray;
+
+                System.Diagnostics.Debug.WriteLine(float.Parse(numbers[0]));
+                System.Diagnostics.Debug.WriteLine(float.Parse(numbers[1]));
+
+                values = float.Parse(numbers[0]) + float.Parse(numbers[1]);
+
+                System.Diagnostics.Debug.WriteLine(values);
+
                 outputGrid.Children.Remove(txBl);
+                txBl.Text = values.ToString();
+                outputGrid.Children.Add(txBl);
+
             }
 
-            value = (string)btn.Tag;
-
-            numString += value;
-
-            txBl.Text = numString;
-            txBl.SetValue(Grid.RowProperty, 1);
-            txBl.HorizontalAlignment = HorizontalAlignment.Right;
-            txBl.Foreground = new SolidColorBrush(Colors.White);
-            txBl.FontSize = 45;
-
-            System.Diagnostics.Debug.WriteLine("Tapped: " + value);
-            outputGrid.Children.Add(txBl);
-
-            started = true;
-            operationBool = false;
-
-            //txBl.Text = value;
         }
 
     }
 }
+
+//private void Btn_TappedEquals(object sender, TappedRoutedEventArgs e)
+//{
+//    float values;
+//    Button btn = (Button)sender;
+//    //System.Diagnostics.Debug.WriteLine(btn.Tag);
+//    Grid outputGrid = FindName("DisplayGrid") as Grid;
+//    outputGrid.Children.Remove(txBl);
+
+//    //System.Diagnostics.Debug.WriteLine(numbers[0]);
+//    System.Diagnostics.Debug.WriteLine(numbers[1]);
+
+//    //values = float.Parse(numbers[0]) + float.Parse(numbers[1]);
+
+//    //txBl.Text = values.ToString();
+
+//    outputGrid.Children.Add(txBl);
+//}
+
+
+//for (int i = 0; i < operations.Length; i++)
+//{
+//    System.Diagnostics.Debug.WriteLine(operations[i]);
+//    System.Diagnostics.Debug.WriteLine(numbers[i]);
+//}
+
+//System.Diagnostics.Debug.WriteLine(operationCounter);
