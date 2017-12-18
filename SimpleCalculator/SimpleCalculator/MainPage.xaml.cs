@@ -16,18 +16,15 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 
-/*
- * themes?
- * Syntax error if / || * put in first
- * 
-*/
+
 namespace SimpleCalculator
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// A Simple Calculator that does the necessary simple calculations quickly
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        //Variables
         int numberCounter = 1;
         string numString;
         string numStringArray;
@@ -39,16 +36,18 @@ namespace SimpleCalculator
         int inputCounter = 0;
         bool equalsPressed = false;
         bool invalidFirstInput = false;
+        bool contin = false;
+        string savedNum;
 
         public MainPage()
         {
             this.InitializeComponent();
 
-            //ApplicationView.PreferredLaunchViewSize = new Size(720, 1280);
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(720, 1280));
             createButtons();
         }
 
+        //Board & Button creator
         private void createButtons()
         {
             StackPanel topStk = new StackPanel();
@@ -61,6 +60,7 @@ namespace SimpleCalculator
             displayGrid.Height = 300;
             displayGrid.Width = 500;
 
+            //Creating Rows
             for (int k = 0; k < 3; k++)
             {
                 displayGrid.RowDefinitions.Add(new RowDefinition());
@@ -82,7 +82,8 @@ namespace SimpleCalculator
                 {
 
                     switch (j)
-                    {
+                    {   
+                        //Setting Operation Buttons
                         case 3:
                             btn = new Button();
                             btn.Height = 150;
@@ -122,6 +123,7 @@ namespace SimpleCalculator
                             btnGrid.Children.Add(btn);
                             break;
 
+                            //Default button is a number
                         default:
                             btn = new Button();
                             btn.Height = 150;
@@ -140,7 +142,8 @@ namespace SimpleCalculator
                                 btn.Tag = value;
                             }
                             else
-                            {
+                            {   
+                                //Buttons for . 0 and =
                                 switch (numberCounter)
                                 {
                                     case 10:
@@ -167,6 +170,7 @@ namespace SimpleCalculator
                             btn.Foreground = new SolidColorBrush(Colors.White);
                             btn.BorderThickness = new Thickness(0);
 
+                            //tapped event
                             btn.Tapped += Btn_Tapped;
                             btnGrid.Children.Add(btn);
 
@@ -178,8 +182,6 @@ namespace SimpleCalculator
 
             }
 
-            System.Diagnostics.Debug.WriteLine("Tapped: ");
-
             btnGrid.Background = new SolidColorBrush(Color.FromArgb(255, (byte)0, (byte)38, (byte)45));
             btnGrid.SetValue(Grid.RowProperty, 1);
             MainHolder.Children.Add(btnGrid);
@@ -188,6 +190,7 @@ namespace SimpleCalculator
 
         TextBlock txBl = new TextBlock();
 
+        //Tapped event
         private void Btn_Tapped(object sender, TappedRoutedEventArgs e)
         {
 
@@ -195,7 +198,8 @@ namespace SimpleCalculator
             Button btn = (Button)sender;
             Grid outputGrid = FindName("DisplayGrid") as Grid;
 
-            if (equalsPressed == true)
+            //Resets arrays when = is tapped
+            if (equalsPressed == true && (btn.Tag == "*" || btn.Tag == "/" || btn.Tag == "+" || btn.Tag == "-"))
             {
                 numbers = new string[100];
                 operations = new string[100];
@@ -204,9 +208,22 @@ namespace SimpleCalculator
                 numString = "";
                 operationCounter = 0;
                 inputCounter = 0;
+                contin = true;
+            }
+            else if(equalsPressed == true)
+            {
+                numbers = new string[100];
+                operations = new string[100];
+                value = "";
+                numStringArray = "";
+                numString = "";
+                operationCounter = 0;
+                inputCounter = 0;
+                contin = false;
             }
 
-            if (inputCounter == 0 && (btn.Tag == "*" || btn.Tag == "/" || btn.Tag == "+" || btn.Tag == "-"))
+            //if first input is an operation throw error
+            if (inputCounter == 0 && (btn.Tag == "*" || btn.Tag == "/" || btn.Tag == "+" || btn.Tag == "-") && contin == false)
             {
                 txBl.Text = "Invalid First Input!";
                 txBl.SetValue(Grid.RowProperty, 1);
@@ -219,8 +236,10 @@ namespace SimpleCalculator
                 inputCounter = 0;
             }
             else { 
+                //If tag is not = then add button or operation to their arrays
                 if (btn.Tag != "=")
                 {
+                    //resetting display in case of first input error
                     if (invalidFirstInput == true)
                     {
                         outputGrid.Children.Remove(txBl);
@@ -228,35 +247,52 @@ namespace SimpleCalculator
                         operationCounter = 0;
                     }
 
-                    if (btn.Tag == "+" || btn.Tag == "-" || btn.Tag == "*" || btn.Tag == "/")
+                    //If its an operation add to the array
+                    if ((btn.Tag == "+" || btn.Tag == "-" || btn.Tag == "*" || btn.Tag == "/") && contin == false)
                     {
                         numbers[operationCounter] = numStringArray;
                         operations[operationCounter] = (string)btn.Tag;
                         operationCounter++;
 
                     }
+                    else if ((btn.Tag == "+" || btn.Tag == "-" || btn.Tag == "*" || btn.Tag == "/") && contin == true)
+                    {
+                        numbers[operationCounter] = savedNum;
+                        operations[operationCounter] = (string)btn.Tag;
+                        operationCounter++;
+                    }
 
+                    //resetting display on next input after equals once calculation is complete
                     if (started || equalsPressed == true)
                     {
                         outputGrid.Children.Remove(txBl);
                         equalsPressed = false;
                     }
 
+
                     value = (string)btn.Tag;
 
+                    //Adds to Display but not to the array
                     if (value == "+" || value == "-" || value == "*" || value == "/")
                     {
                         numString += value;
                         value = "";
                         numStringArray = "";
                     }
+                    //Adds to the array var and display
                     else
                     {
                         numStringArray += value;
                         numString += value;
                     }
-
-                    txBl.Text = numString;
+                    if (contin)
+                    {
+                        txBl.Text = savedNum + "" + numString;
+                    }else
+                    {
+                        txBl.Text = numString;
+                    }
+                    
                     txBl.SetValue(Grid.RowProperty, 1);
                     txBl.HorizontalAlignment = HorizontalAlignment.Right;
                     txBl.Foreground = new SolidColorBrush(Colors.White);
@@ -267,23 +303,29 @@ namespace SimpleCalculator
                     started = true;
                     inputCounter++;
                 }
+                //else is equals ==> do calculation
                 else
                 {
                     float values = 0;
                     int counter = 0;
                     float storedValue = 0;
 
+                    //adds last number in the string to the array
                     numbers[operationCounter] = numStringArray;
 
+                    //Runs through the arrays
                     for (int i = 0; i < operationCounter; i++)
-                    {
+                    {   
+                        //If operation == + then add first and second item in the array
                         if (operations[counter] == "+")
                         {
+                            //if its the first calculation add first and second then stored value = value
                             if (counter == 0)
                             {
                                 values = float.Parse(numbers[counter]) + float.Parse(numbers[counter + 1]);
                                 storedValue = values;
                             }
+                            //else  if not first calculation add stored value with the third/fourth number....etc
                             else
                             {
                                 values = storedValue + float.Parse(numbers[counter + 1]);
@@ -292,6 +334,7 @@ namespace SimpleCalculator
 
                         }
 
+                        //Same as Plus operator but -
                         else if (operations[counter] == "-")
                         {
                             if (counter == 0)
@@ -306,6 +349,7 @@ namespace SimpleCalculator
                             }
                         }
 
+                        //Same as Plus operator but *
                         else if (operations[counter] == "*")
                         {
                             if (counter == 0)
@@ -320,6 +364,7 @@ namespace SimpleCalculator
                             }
                         }
 
+                        //Same as Plus operator but /
                         else if (operations[counter] == "/")
                         {
                             if (counter == 0)
@@ -342,6 +387,7 @@ namespace SimpleCalculator
                     outputGrid.Children.Add(txBl);
                     equalsPressed = true;
 
+                    savedNum = values.ToString();
                 }
             }
 
